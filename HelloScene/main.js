@@ -61,7 +61,6 @@ cc.game.onStart = function(){
     // Adjust viewport meta
     cc.view.adjustViewPort(true);
     // Setup the resolution policy and design resolution size
-    cc.view.setDesignResolutionSize(960, 640, cc.ResolutionPolicy.SHOW_ALL);
     // Instead of set design resolution, you can also set the real pixel resolution size
     // Uncomment the following line and delete the previous line.
     // cc.view.setRealPixelResolution(960, 640, cc.ResolutionPolicy.SHOW_ALL);
@@ -70,6 +69,29 @@ cc.game.onStart = function(){
     //load resources
     cc.LoaderScene.preload(g_resources, function () {
         cc.director.runScene(new HelloWorldScene());
+
+        /*
+        //用定时器切换场景1。
+        setTimeout(function(){
+            //cc.director.runScene(new SecondScene());//直接切换。
+            //2秒的变淡消失,不加color参数默认为变暗。
+            cc.director.runScene(new cc.TransitionFade(2,new SecondScene(),new cc.color(255,255,255)));
+        },3000);
+        */
+        //用定时器切换场景2。
+        setTimeout(function(){
+            //pushScene不消毁当前场景，进入下一场景。
+            cc.director.pushScene(new cc.TransitionFade(2,new SecondScene(),new cc.color(255,255,255)));
+        },3000);
+
+        setTimeout(function(){
+            //消毁当前场景返回上一场景。
+            cc.director.popScene();
+        },6000);
+
+        //注意，两个定时器是同时开始计时的。
+
+
     }, this);
 };
 cc.game.run();
