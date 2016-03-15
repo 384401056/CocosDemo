@@ -24,10 +24,14 @@ var HelloWorldLayer = cc.Layer.extend({
         bg.y = size.height/2;
         this.addChild(bg);
 
+        //var bgsize = bg.getContentSize();//获取背景图的大小
+        //bgsize.getWidth();//再获取具体的长各宽。
+        //bgsize.getHeight();
+
         var sp1 = new cc.Sprite(res.sp1_png);
-        //位置居中。
-        sp1.x = size.width/2;
-        sp1.y = size.height/2;
+        //位置对于bg居中。
+        sp1.x = bg._getWidth()/2; //直接获取bg的长宽
+        sp1.y =  bg._getHeight()/2;
         bg.addChild(sp1);
 
 
