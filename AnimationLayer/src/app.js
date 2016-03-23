@@ -1,3 +1,21 @@
+var HelloWorldLayer = cc.Layer.extend({
+    sprite:null,
+    ctor:function () {
+        this._super();
+        var size = cc.winSize;
+
+        var helloLabel = new cc.LabelTTF("动画效果", "Arial", 20);
+        // position the label on the center of the screen
+        helloLabel.x = 100;
+        helloLabel.y = size.height-50 ;
+        // add the label as a child to this layer
+        this.addChild(helloLabel, 1);
+
+        return true;
+    }
+});
+
+
 //动画层01--逐帧变化
 var animationLayer_01 = cc.Layer.extend({
     deltaX:2,
@@ -222,7 +240,13 @@ var composeAction_02 = cc.Layer.extend({
 var HelloWorldScene = cc.Scene.extend({
     onEnter:function () {
         this._super();
+<<<<<<< HEAD
         var layer = new composeAction_02();
+=======
+        var layer = new animationLayer_05();
+        var layer0 = new HelloWorldLayer();
+        this.addChild(layer0);
+>>>>>>> afb39cda95739036522c55f0bdbb303a44cd8192
         this.addChild(layer);
     }
 });
