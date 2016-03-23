@@ -15,7 +15,6 @@ var animationLayer_01 = cc.Layer.extend({
         this.ball.y = size.width/2;
         this.addChild(this.ball,1);
 
-
         this.bg = new cc.DrawNode();//用于记录球的运动轨迹。
         this.addChild(this.bg,0);
 
@@ -144,12 +143,86 @@ var animationLayer_05 = cc.Layer.extend({
 
 });
 
+//动画06，变色。
+var animationLayer_06 = cc.Layer.extend({
+
+    ctor: function(){
+        this._super();
+        var size = cc.director.getWinSize();
+
+        var ball  = new cc.Sprite(res.ball_png);
+        ball.x = size.width/2;
+        ball.y = size.height/2;
+        this.addChild(ball);
+
+        //2秒内变颜色。
+        var action = new cc.tintTo(2,0,255,0);
+        ball.runAction(action);
+        return true;
+
+    }
+});
+
+//组合动画01
+var cmposeAction_01 = cc.Layer.extend({
+
+    ctor:function(){
+        this._super();
+        var size = cc.director.getWinSize();
+
+        var ball  = new cc.Sprite(res.ball_png);
+        ball.x = size.width/2;
+        ball.y = size.height/2;
+        this.addChild(ball);
+
+        var action01 = new cc.tintTo(0.3,100,0,0);
+        var action02 = new cc.tintTo(0.3,255,255,255);
+        ball.runAction(cc.sequence(action01,action02));
+        return true;
+    }
+
+
+});
+
+//组合动画02
+var composeAction_02 = cc.Layer.extend({
+    ctor: function(){
+        this._super();
+        var size = cc.director.getWinSize();
+
+        var ball  = new cc.Sprite(res.ball_png);
+        ball.x = 0;
+        ball.y = size.height/2;
+        this.addChild(ball);
+
+
+        var actionMove1 = new cc.moveBy(1,cc.p(size.width/2,0));
+        var actionScale1 = new cc.scaleTo(1,2,2);
+        var actionScale2 = new cc.scaleTo(1,1,1);
+        var actionMove2 = new cc.moveBy(1,cc.p(-(size.width/2),0));
+        var sequenceAction = new cc.sequence(actionMove1,actionScale1,actionScale2,actionMove2);
+
+        //定义动画重复执行。
+        var repeatAction = cc.repeat(sequenceAction,3);
+
+        //ball.runAction(sequenceAction);
+        ball.runAction(repeatAction);
+
+        return true;
+    }
+
+});
+
+
+
+
+
 
 
 var HelloWorldScene = cc.Scene.extend({
     onEnter:function () {
         this._super();
-        var layer = new animationLayer_05();
+        var layer = new composeAction_02();
         this.addChild(layer);
     }
 });
