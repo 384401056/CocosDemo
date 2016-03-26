@@ -1,4 +1,4 @@
-//菜单与文字层。.
+//菜单与文字层。
 var HelloWorldLayer = cc.Layer.extend({
     helloLabel:null,
     ctor:function() {

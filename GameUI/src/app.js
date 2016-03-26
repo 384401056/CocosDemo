@@ -23,7 +23,7 @@ var bgLayer = cc.Layer.extend({
 
         var spriteBG = new cc.Sprite(res.HelloWorld_png);
         spriteBG.x = size.width/2;
-        spriteBG.y = size.height-120;
+        spriteBG.y = size.height/2;
         this.addChild(spriteBG);
         return true;
     }
@@ -137,13 +137,86 @@ var MenuItemToggleLayer = cc.Layer.extend({
 
 //从Cocos Studio导入UI
 var CustomUILayer = cc.Layer.extend({
+    textField:null,
     ctor:function(){
         this._super();
 
-        var root = new ccs.uiReader.widgetFromJsonFile(res.MainScene);
+        var root = ccs.load(res.mainScene).node;
         this.addChild(root);
+
+
+
+        //获取界面上的控件,Tag就是cocosStudio中的逻辑标签。
+        var button = ccui.helper.seekWidgetByTag(root,4);
+        var checkBox = ccui.helper.seekWidgetByName(root,"CheckBox_1");
+        var slider = ccui.helper.seekWidgetByTag(root,7);
+        this.textField = ccui.helper.seekWidgetByTag(root,8);
+
+
+        //点击事件,只有一个参数就是callback,所以要用bind(this)
+        //button.addClickEventListener(this.buttonClicked.bind(this));
+        //触摸事件
+        button.addTouchEventListener(this.buttonTouched,this);
+
+        //选中事件
+        checkBox.addEventListener(this.checkBoxSelected,this);
+
+        slider.addTouchEventListener(this.sliderTouched,this);
+
         return true;
+    },
+
+
+    buttonClicked:function(sender){
+        this.textField.setString("点击了按钮");
+    },
+
+    buttonTouched:function(sender,type){
+        switch(type)
+        {
+            case ccui.Widget.TOUCH_BEGAN:
+                this.textField.setString("Touch Down");
+                break;
+            case ccui.Widget.TOUCH_MOVED:
+                this.textField.setString("Touch Moved");
+                break;
+            case ccui.Widget.TOUCH_ENDED:
+                this.textField.setString("Touch Ended");
+                break;
+            case ccui.Widget.TOUCH_CANCELED:
+                this.textField.setString("Touch Canceled");
+                break;
+        }
+    },
+
+    checkBoxSelected:function(sender,type){
+        switch(type){
+            //选中状态
+            case ccui.CheckBox.EVENT_SELECTED:
+                this.textField.setString("SELECTED");
+                break;
+            //非选中状态
+            case ccui.CheckBox.EVENT_UNSELECTED:
+                this.textField.setString("UNSELECTED");
+                break;
+        }
+    },
+
+    sliderTouched:function(sender,type){
+        switch (type){
+            case 2://ccui.Slider.EVENT_SLIDEBALL_UP
+                //this.textField.setString("UP");
+                this.textField.setString(sender.percent);
+                break;
+            case ccui.Slider.EVENT_PERCENT_CHANGED://0
+                this.textField.setString(sender.percent);
+                break;
+        }
     }
+
+
+
+
 });
 
 
@@ -152,13 +225,13 @@ var HelloWorldScene = cc.Scene.extend({
     onEnter:function () {
         this._super();
         var layerBG = new bgLayer();
-        this.addChild(layerBG);
+        this.addChild(layerBG,0);
 
         var layer0 = new HelloWorldLayer();
-        this.addChild(layer0);
+        this.addChild(layer0,1);
 
-        var layer = new CustomUILayer();
-        this.addChild(layer);
+        var layer1 = new CustomUILayer();
+        this.addChild(layer1,2);
 
     }
 });
