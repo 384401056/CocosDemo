@@ -5,5 +5,7 @@
  */
 
 var Constant = {
+    CANDY_WIDTH:64,
+    CANDY_HEIGHT:64,
     CANDY_TYPE_COUNT:5
 }
