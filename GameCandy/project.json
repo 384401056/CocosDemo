@@ -14,6 +14,9 @@
     "jsList" : [
         "src/resource.js",
         "src/app.js",
-        "src/GameUI.js"
+        "src/Candy.js",
+        "src/GameUI.js",
+        "src/Constant.js",
+        "src/Storage.js"
     ]
 }

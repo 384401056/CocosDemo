@@ -6,11 +6,8 @@ var trace = function(){
 var GameScene = cc.Scene.extend({
     onEnter:function () {
         this._super();
-        var gameLayer = new GameLayer();
-        this.addChild(gameLayer,0);
-
-        var gameUi= new GameUI();
-        this.addChild(gameUi,1);
+        var layer= new GameLayer();
+        this.addChild(layer,0);
     }
 });
 

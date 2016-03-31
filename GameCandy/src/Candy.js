@@ -6,23 +6,23 @@
 
 var Candy = cc.Sprite.extend({
     type:0,
-    colum:0,
+    column:0,
     row:0,
-    ctor:function(type,colum,row){
+    ctor:function(type,column,row){
         this._super("res/candy/"+(type+1)+".png");
-        this.init(type,colum,row);
+        this.init(type,column,row);
         return true;
     },
 
-    init:function(type,colum,row){
+    init:function(type,column,row){
         this.type = type;
-        this.colum = colum;
+        this.column = column;
         this.row = row;
-    },
+    }
 
 });
 
 //根据定义的常量，创建随机颜色的糖果
-Candy.createRandomType = function(colum,row){
-    return new Candy(parseInt(Math.random()*Constant.CANDY_TYPE_COUNT),colum,row);
+Candy.createRandomType = function(column,row){
+    return new Candy(parseInt(Math.random()*Constant.CANDY_TYPE_COUNT),column,row);
 };
