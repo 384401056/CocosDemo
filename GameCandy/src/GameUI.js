@@ -36,7 +36,7 @@ var GameUI = cc.Layer.extend({
         levelLabel.y = size.height-40;
         this.addChild(levelLabel);
 
-        this.levelText = new cc.LabelTTF("0","Arial",30);
+        this.levelText = new cc.LabelTTF(Storage.getCurrentLevel(),"Arial",30);
         this.levelText.setColor(cc.color(0,0,0));
         this.levelText.x = 100;
         this.levelText.y = size.height-80;
@@ -50,7 +50,7 @@ var GameUI = cc.Layer.extend({
         this.addChild(scoreLabel);
 
 
-        this.scoreText = new cc.LabelTTF("0", "Arial", 30);
+        this.scoreText = new cc.LabelTTF(Storage.getCurrentScore(), "Arial", 30);
         this.scoreText.setColor(cc.color(0,0,0));
         this.scoreText.x = 200;
         this.scoreText.y = size.height-80;
@@ -65,7 +65,7 @@ var GameUI = cc.Layer.extend({
         this.addChild(stepLabel);
 
 
-        this.stepText = new cc.LabelTTF("50", "Arial", 30);
+        this.stepText = new cc.LabelTTF(Constant.LEVELS[0].limitStep, "Arial", 30);
         this.stepText.setColor(cc.color(0,0,0));
         this.stepText.x = 300;
         this.stepText.y = size.height-80;
@@ -80,7 +80,7 @@ var GameUI = cc.Layer.extend({
         window.y = size.height/2+50;
         this.addChild(window);
 
-        var successLevel =new cc.LabelTTF("10","Arial",35);
+        var successLevel =new cc.LabelTTF(""+(this.gameLayer.level+1),"Arial",35);
         successLevel.setColor(cc.color(255,120,0));
         successLevel.x = window.height/2-15;
         successLevel.y = window.height/2+78;
@@ -92,7 +92,7 @@ var GameUI = cc.Layer.extend({
         window.addChild(successStepText);
 
 
-        var successStep =new cc.LabelTTF("50","Arial",30);
+        var successStep =new cc.LabelTTF(""+(this.gameLayer.limitStep - this.gameLayer.steps),"Arial",30);
         successStep.x = window.width/2+50;
         successStep.y = window.height/2-100;
         window.addChild(successStep);
@@ -307,7 +307,7 @@ var GameLayer = cc.Layer.extend({
 
             this.score += joinCandys.length*joinCandys.length;//计算分数.
             this._generateNewCandy();//生成新的糖果.
-            //this._checkSucceedOrFail();//检查游戏是否结束。
+            this._checkSucceedOrFail();//检查游戏是否结束。
         }
     },
 
@@ -316,6 +316,7 @@ var GameLayer = cc.Layer.extend({
      * @private
      */
     _generateNewCandy:function(){
+
         var maxTime = 0;//定时器scheduleOnce的执行时间。
         for(var i=0;i<Constant.MAP_SIZE;i++){
             var missCount = 0;
@@ -323,11 +324,11 @@ var GameLayer = cc.Layer.extend({
                 var candy = this.map[i][j];
                 //如果糖果为null
                 if(!candy){
-                    var candy = Candy.createRandomType(i,Constant.MAP_SIZE+missCount);
-                    candy.x = candy.column*Constant.CANDY_WIDTH + Constant.CANDY_WIDTH/2;
-                    candy.y = candy.column*Constant.CANDY_HEIGHT + Constant.CANDY_HEIGHT/2;
-                    this.mapPanel.addChild(candy);
-                    this.map[i][candy.row] = candy;
+                    var newCandy = Candy.createRandomType(i,Constant.MAP_SIZE+missCount);
+                    newCandy.x = newCandy.column*Constant.CANDY_WIDTH + Constant.CANDY_WIDTH/2;
+                    newCandy.y = newCandy.row*Constant.CANDY_HEIGHT + Constant.CANDY_HEIGHT/2;
+                    this.mapPanel.addChild(newCandy);
+                    this.map[i][newCandy.row] = newCandy;
                     missCount++;
                     trace("missCount:",missCount);
                 }else{
@@ -354,8 +355,8 @@ var GameLayer = cc.Layer.extend({
                 this.map[i].splice(j,i);
             }
         }
-        this.moving = false;
-        //this.scheduleOnce(this._finishCandyFalls.bind(this),maxTime);
+
+        this.scheduleOnce(this._finishCandyFalls.bind(this),maxTime);
     },
 
     /**
@@ -363,17 +364,19 @@ var GameLayer = cc.Layer.extend({
      * @private
      */
     _checkSucceedOrFail:function(){
+        this.moving = true;
         if(this.score > this.targetScore){
             this.ui.showSuccess(); //显示胜利界面.
             this.score += (this.limitStep-this.steps)*30; //剩余步数可以加倍得分。
             //保存游戏数据
             Storage.setCurrentLevel(this.level+1);
-            Storage.setCurrentScore(this.score);
+            Storage.setCurrentScore(0);
 
             this.scheduleOnce(function () {
                cc.director.runScene(new GameScene()); //重新载入游戏界面.
             },3);
-        }else if(this.steps >= this.targetScore){
+
+        }else if(this.steps >= this.limitStep){
             this.ui.showFail(); //显示失败界面.
             //保存游戏数据
             Storage.setCurrentLevel(0);
@@ -382,6 +385,7 @@ var GameLayer = cc.Layer.extend({
                 cc.director.runScene(new GameScene()); //重新载入游戏界面.
             },3);
         }
+        this.moving = false;
     },
 
     /**
