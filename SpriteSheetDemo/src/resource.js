@@ -1,5 +1,6 @@
 var res = {
-    HelloWorld_png : "res/HelloWorld.png",
+    cand_list:"res/candy.plist",
+    cand_png: "res/candy.png"
 };
 
 var g_resources = [];

@@ -6,10 +6,10 @@
     "frameRate" : 60,
     "noCache" : false,
     "id" : "gameCanvas",
-    "renderMode" : 0,
+    "renderMode" : 1,
     "engineDir":"frameworks/cocos2d-html5",
 
-    "modules" : ["cocos2d"],
+    "modules" : ["cocos2d","ccpool"],
 
     "jsList" : [
         "src/resource.js",
