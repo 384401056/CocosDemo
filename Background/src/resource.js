@@ -1,5 +1,8 @@
 var res = {
-    HelloWorld_png : "res/HelloWorld.png",
+    bg1 : "res/bgLayer.jpg",
+    bg2 : "res/bgLayer2.png",
+    bg3 : "res/bgLayer3.png",
+    bg4 : "res/bgLayer4.png"
 };
 
 var g_resources = [];
