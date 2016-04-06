@@ -1,44 +1,43 @@
+//打印函数.
+var trace = function(){
+    cc.log(Array.prototype.join.call(arguments,","));
+};
 
-var HelloWorldLayer = cc.Layer.extend({
-    sprite:null,
-    ctor:function () {
-        //////////////////////////////
-        // 1. super init first
+
+//=============逐帧动画加载SpriteSheet==========================
+var AnimationLayer = cc.Layer.extend({
+    ctor:function(){
         this._super();
-
-        /////////////////////////////
-        // 2. add a menu item with "X" image, which is clicked to quit the program
-        //    you may modify it.
-        // ask the window size
         var size = cc.winSize;
+        var animation = new cc.Animation();
+        var tree = new cc.Sprite();
 
-        /////////////////////////////
-        // 3. add your codes below...
-        // add a label shows "Hello World"
-        // create and initialize a label
-        var helloLabel = new cc.LabelTTF("Hello World", "Arial", 38);
-        // position the label on the center of the screen
-        helloLabel.x = size.width / 2;
-        helloLabel.y = size.height / 2 + 200;
-        // add the label as a child to this layer
-        this.addChild(helloLabel, 5);
+        //导入SpriteSheet
+        cc.spriteFrameCache.addSpriteFrames(res.tree_list);
 
-        // add "HelloWorld" splash screen"
-        this.sprite = new cc.Sprite(res.HelloWorld_png);
-        this.sprite.attr({
-            x: size.width / 2,
-            y: size.height / 2
-        });
-        this.addChild(this.sprite, 0);
-
+        for(var i=1;i<6;i++){
+            animation.addSpriteFrame(cc.spriteFrameCache.getSpriteFrame(i+".png"))//生成frame
+        }
+        animation.setDelayPerUnit(1/5);
+        animation.setLoops(1);
+        var action = cc.animate(animation);
+        tree.x = size.width/2;
+        tree.y = size.height/2;
+        this.addChild(tree);
+        tree.runAction(action);//重复播放
         return true;
     }
+
 });
+
+//==========================骨骼动画==================
+
+
 
 var HelloWorldScene = cc.Scene.extend({
     onEnter:function () {
         this._super();
-        var layer = new HelloWorldLayer();
+        var layer = new AnimationLayer();
         this.addChild(layer);
     }
 });

@@ -1,5 +1,6 @@
 var res = {
-    HelloWorld_png : "res/HelloWorld.png",
+    tree_pngs : "res/tree.png",
+    tree_list : "res/tree.plist"
 };
 
 var g_resources = [];
